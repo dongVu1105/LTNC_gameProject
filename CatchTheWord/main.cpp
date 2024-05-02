@@ -5,7 +5,7 @@
 
 using namespace std;
 
-//******************/
+//***********************************************/
 const int NUM_BUTTOMS = 26;
 const string wordList[] = {"firefox", "rockstar","eyelid", "blackmail",
 "brainstorm", "brokenheart", "carwash", "cocktail", "countdown",
@@ -25,6 +25,7 @@ void printFalse();
 bool playGame(int &userScore, string systemWord);
 int computeNumber(int x, int y);
 int playerChoose();
+int calcCenter(int ans_length);
 void printType(string ans);
 void printInput(int userScore, string ans, string systemWord);
 string inputFromUser(int userScore, string systemWord);
@@ -44,7 +45,7 @@ string playAgain(int userScore, string systemWord);
 void printWin();
 void printVictory(int userScore);
 
-//******************/
+//******************************************/
 const string WINDOW_TITLE = "Catch The Word";
 const int SCREEN_WIDTH = 1103;// ;
 const int SCREEN_HEIGHT = 631; //;
@@ -111,7 +112,7 @@ string chooseWord()
 }
 
 void printFalse(){
-    renderTexture(not_correct, renderer, 480, 200);
+    renderTexture(not_correct, renderer, 463, 200);
     SDL_RenderPresent(renderer);
 }
 
@@ -173,8 +174,13 @@ int playerChoose(){
     return number;
 }
 
+int calcCenter(int ans_length) {
+    int center = ((SCREEN_WIDTH - ans_length * 48) / 2)-30;
+    return center;
+}
+
 void printType(string ans){
-    int x0=256, y0=425;
+    int x0=calcCenter(ans.length()), y0=434;
     for(int i=0; i<ans.length();i++){
         char c = ans[i];
         int index = c-'a';
@@ -228,7 +234,7 @@ int findIndexOfWord(const string wordList[],const int n, string word) {
 
 void printImg(string systemWord){
     int index = findIndexOfWord(wordList, wordCount, systemWord);
-    renderTexture(numberImg[index], renderer, 410, 95);
+    renderTexture(numberImg[index], renderer, 410, 110);
     SDL_RenderPresent(renderer);
 }
 
@@ -246,7 +252,7 @@ int currentScore(int userScore, bool flag){
 }
 
 void printTrue(){
-    renderTexture(exactly, renderer, 480, 200);
+    renderTexture(exactly, renderer, 495, 200);
     SDL_RenderPresent(renderer);
 }
 
@@ -314,7 +320,7 @@ string playAgain(int userScore, string systemWord){
 }
 
 void printWin(){
-    renderTexture(win, renderer, 390, 75);
+    renderTexture(win, renderer, 388, 75);
     SDL_RenderPresent(renderer);
 }
 
@@ -322,6 +328,30 @@ void printVictory(int userScore){
     showGame();
     currentScore(userScore, true);
     printWin();
+}
+
+void showGame()
+{
+    SDL_RenderClear(renderer);
+    renderTexture(background, renderer, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
+    SDL_RenderPresent(renderer);
+}
+
+void pause()
+{
+    int delayTime = 1500;
+    do {
+        SDL_Delay(10);
+        delayTime-= 10;
+
+        SDL_Event e;
+        while (SDL_PollEvent(&e)) {
+            if ((e.type == SDL_QUIT) || (e.type == SDL_KEYDOWN && e.key.keysym.sym == SDLK_ESCAPE)) {
+                unload_SDL_and_Images();
+                exit(1);
+            }
+        }
+    } while (delayTime > 0);
 }
 
 //****************************************************
@@ -410,38 +440,6 @@ void load_SDL_and_Images()
         exit(1);
     }
 }
-
-void showGame()
-{
-    SDL_RenderClear(renderer);
-    renderTexture(background, renderer, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
-    SDL_RenderPresent(renderer);
-}
-
-void pause()
-{
-    int delayTime = 1500;
-    do {
-        SDL_Delay(10);
-        delayTime-= 10;
-
-        SDL_Event e;
-        while (SDL_PollEvent(&e)) {
-            if ((e.type == SDL_QUIT) || (e.type == SDL_KEYDOWN && e.key.keysym.sym == SDLK_ESCAPE)) {
-                unload_SDL_and_Images();
-                exit(1);
-            }
-        }
-    } while (delayTime > 0);
-}
-
-
-
-
-
-
-
-
 
 
 //*****************************************************
