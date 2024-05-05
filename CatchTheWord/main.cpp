@@ -2,10 +2,12 @@
 #define SDL_MAIN_HANDLED
 #include <ctime>
 #include <SDL_image.h>
+#include "defs.h"
+#include "graphics.h"
 
 using namespace std;
 
-//***********************************************/
+Graphics graphics;
 const int NUM_BUTTOMS = 26;
 const string wordList[] = {"firefox", "rockstar","eyelid", "blackmail",
 "brainstorm", "brokenheart", "carwash", "cocktail", "countdown",
@@ -17,8 +19,12 @@ const int wordCount = sizeof(wordList) / sizeof(string);
 const int maxScore = 3;
 const int maxCharacter = 15;
 
-void displayStartGame();
+void load_SDL_and_Images();
+void unload_SDL_and_Images();
 void showGame();
+void pause();
+
+void displayStartGame();
 string chooseWord();
 void printTrue();
 void printFalse();
@@ -45,10 +51,6 @@ string playAgain(int userScore, string systemWord);
 void printWin();
 void printVictory(int userScore);
 
-//******************************************/
-const string WINDOW_TITLE = "Catch The Word";
-const int SCREEN_WIDTH = 1103;// ;
-const int SCREEN_HEIGHT = 631; //;
 SDL_Window* window;
 SDL_Renderer* renderer;
 SDL_Texture *background;
@@ -57,22 +59,6 @@ SDL_Texture *numberScore[maxScore+1];
 SDL_Texture *numberButtoms[NUM_BUTTOMS+1];
 SDL_Texture *numberCharacter[maxCharacter+1];
 SDL_Texture *numberImg[wordCount+1];
-
-void load_SDL_and_Images();
-void unload_SDL_and_Images();
-void showGame();
-void pause();
-
-//************ SDL functions *************/
-void logSDLError(std::ostream& os, const std::string &msg, bool fatal = false);
-void initSDL(SDL_Window* &window, SDL_Renderer* &renderer);
-void quitSDL(SDL_Window* window, SDL_Renderer* renderer);
-void waitUntilKeyPressed();
-SDL_Texture *loadTexture(const char *filename, SDL_Renderer* renderer);
-void renderTexture(SDL_Texture *tex, SDL_Renderer *ren, int x, int y);
-void renderTexture(SDL_Texture *tex, SDL_Renderer *ren, int x, int y, int w, int h);
-//***************************************/
-
 
 int main(){
     load_SDL_and_Images();
@@ -91,7 +77,7 @@ int main(){
             break;
         }
     }
-    waitUntilKeyPressed();
+    graphics.waitUntilKeyPressed();
     unload_SDL_and_Images();
     return 0;
 }
@@ -112,7 +98,7 @@ string chooseWord()
 }
 
 void printFalse(){
-    renderTexture(not_correct, renderer, 463, 200);
+    graphics.renderTexture(not_correct, renderer, 463, 200);
     SDL_RenderPresent(renderer);
 }
 
@@ -184,7 +170,7 @@ void printType(string ans){
     for(int i=0; i<ans.length();i++){
         char c = ans[i];
         int index = c-'a';
-        renderTexture(numberButtoms[index], renderer, x0+48*(i+1),y0);
+        graphics.renderTexture(numberButtoms[index], renderer, x0+48*(i+1),y0);
         SDL_RenderPresent(renderer);
     }
 }
@@ -219,8 +205,8 @@ string inputFromUser(int userScore, string systemWord){
 }
 
 void printWordSize(int systemWord_length){
-    renderTexture(suggest, renderer, 60, 180);
-    renderTexture(numberCharacter[systemWord_length], renderer, 155, 180);
+    graphics.renderTexture(suggest, renderer, 60, 180);
+    graphics.renderTexture(numberCharacter[systemWord_length], renderer, 155, 180);
     SDL_RenderPresent(renderer);
 }
 
@@ -234,12 +220,12 @@ int findIndexOfWord(const string wordList[],const int n, string word) {
 
 void printImg(string systemWord){
     int index = findIndexOfWord(wordList, wordCount, systemWord);
-    renderTexture(numberImg[index], renderer, 410, 110);
+    graphics.renderTexture(numberImg[index], renderer, 410, 110);
     SDL_RenderPresent(renderer);
 }
 
 void printScore(int userScore){
-    renderTexture(numberScore[userScore], renderer, 938, 150);
+    graphics.renderTexture(numberScore[userScore], renderer, 938, 150);
     SDL_RenderPresent(renderer);
 }
 
@@ -252,7 +238,7 @@ int currentScore(int userScore, bool flag){
 }
 
 void printTrue(){
-    renderTexture(exactly, renderer, 495, 200);
+    graphics.renderTexture(exactly, renderer, 495, 200);
     SDL_RenderPresent(renderer);
 }
 
@@ -264,16 +250,16 @@ bool checkWord(string systemWord, string userWord){
 }
 
 void printLose(){
-    renderTexture(lose, renderer, 438, 200);
+    graphics.renderTexture(lose, renderer, 438, 200);
     SDL_RenderPresent(renderer);
 }
 
 void printOption(int userScore){
     if(userScore<=0){
-        renderTexture(play_again, renderer, 480, 200);
+        graphics.renderTexture(play_again, renderer, 480, 200);
         SDL_RenderPresent(renderer);
     } else {
-        renderTexture(play_continue, renderer, 480, 200);
+        graphics.renderTexture(play_continue, renderer, 480, 200);
         SDL_RenderPresent(renderer);
     }
 
@@ -320,7 +306,7 @@ string playAgain(int userScore, string systemWord){
 }
 
 void printWin(){
-    renderTexture(win, renderer, 388, 75);
+    graphics.renderTexture(win, renderer, 388, 75);
     SDL_RenderPresent(renderer);
 }
 
@@ -333,7 +319,7 @@ void printVictory(int userScore){
 void showGame()
 {
     SDL_RenderClear(renderer);
-    renderTexture(background, renderer, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
+    graphics.renderTexture(background, renderer, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
     SDL_RenderPresent(renderer);
 }
 
@@ -354,7 +340,6 @@ void pause()
     } while (delayTime > 0);
 }
 
-//****************************************************
 void unload_SDL_and_Images()
 {
     SDL_DestroyTexture(background);
@@ -376,21 +361,21 @@ void unload_SDL_and_Images()
     for (int i=0; i<maxCharacter; i++) {
         SDL_DestroyTexture(numberImg[i]);
     }
-    quitSDL(window, renderer);
+    graphics.quitSDL(window, renderer);
 }
 
 void load_SDL_and_Images()
 {
-    initSDL(window, renderer);
+    graphics.initSDL(window, renderer);
 
-    background = loadTexture("images/background.png", renderer);
-    exactly = loadTexture("images/exactly.png", renderer);
-    lose = loadTexture("images/lose.png", renderer);
-    not_correct = loadTexture("images/not_correct.png", renderer);
-    suggest = loadTexture("images/suggest.png", renderer);
-    play_again = loadTexture("images/play_again.png", renderer);
-    play_continue = loadTexture("images/play_continue.png", renderer);
-    win = loadTexture("images/win.png", renderer);
+    background = graphics.loadTexture("images/background.png", renderer);
+    exactly = graphics.loadTexture("images/exactly.png", renderer);
+    lose = graphics.loadTexture("images/lose.png", renderer);
+    not_correct = graphics.loadTexture("images/not_correct.png", renderer);
+    suggest = graphics.loadTexture("images/suggest.png", renderer);
+    play_again = graphics.loadTexture("images/play_again.png", renderer);
+    play_continue = graphics.loadTexture("images/play_continue.png", renderer);
+    win = graphics.loadTexture("images/win.png", renderer);
     bool is_load_buttom_failed = false;
     bool is_load_score_failed = false;
     bool is_load_character_failed = false;
@@ -400,7 +385,7 @@ void load_SDL_and_Images()
         character+=char(i+65);
         string filename = "images/" + character + ".png";
         const char* filename_cstr = filename.c_str();
-        numberButtoms[i] = loadTexture(filename_cstr, renderer);
+        numberButtoms[i] = graphics.loadTexture(filename_cstr, renderer);
         if (numberButtoms[i] == nullptr) {
             is_load_buttom_failed = true;
             break;
@@ -409,7 +394,7 @@ void load_SDL_and_Images()
     for (int i=0; i<=maxScore; i++) {
         string filename = "images/" +to_string(i*10) + ".png";
         const char* filename_cstr = filename.c_str();
-        numberScore[i] = loadTexture(filename_cstr, renderer);
+        numberScore[i] = graphics.loadTexture(filename_cstr, renderer);
         if (numberScore[i] == nullptr) {
             is_load_score_failed = true;
             break;
@@ -418,7 +403,7 @@ void load_SDL_and_Images()
     for (int i=2; i<=maxCharacter; i++) {
         string filename = "images/s" +to_string(i) + ".png";
         const char* filename_cstr = filename.c_str();
-        numberCharacter[i] = loadTexture(filename_cstr, renderer);
+        numberCharacter[i] = graphics.loadTexture(filename_cstr, renderer);
         if (numberCharacter[i] == nullptr) {
             is_load_character_failed = true;
             break;
@@ -427,7 +412,7 @@ void load_SDL_and_Images()
     for (int i=0; i<wordCount; i++) {
         string filename = "images/" +wordList[i] + ".png";
         const char* filename_cstr = filename.c_str();
-        numberImg[i] = loadTexture(filename_cstr, renderer);
+        numberImg[i] = graphics.loadTexture(filename_cstr, renderer);
         if (numberImg[i] == nullptr) {
             is_load_questionImg_failed = true;
             break;
@@ -440,119 +425,3 @@ void load_SDL_and_Images()
         exit(1);
     }
 }
-
-
-//*****************************************************
-// Các hàm chung về khởi tạo và huỷ SDL
-void logSDLError(std::ostream& os,
-                 const std::string &msg, bool fatal)
-{
-    os << msg << " Error: " << SDL_GetError() << std::endl;
-    if (fatal) {
-        SDL_Quit();
-        exit(1);
-    }
-}
-
-void initSDL(SDL_Window* &window, SDL_Renderer* &renderer)
-{
-    if (SDL_Init(SDL_INIT_EVERYTHING) != 0)
-        logSDLError(std::cout, "SDL_Init", true);
-
-    window = SDL_CreateWindow(WINDOW_TITLE.c_str(), SDL_WINDOWPOS_CENTERED,
-       SDL_WINDOWPOS_CENTERED, SCREEN_WIDTH, SCREEN_HEIGHT, SDL_WINDOW_SHOWN);
-    //window = SDL_CreateWindow(WINDOW_TITLE.c_str(), SDL_WINDOWPOS_CENTERED,
-    //   SDL_WINDOWPOS_CENTERED, SCREEN_WIDTH, SCREEN_HEIGHT, SDL_WINDOW_FULLSCREEN_DESKTOP);
-    if (window == nullptr) logSDLError(std::cout, "CreateWindow", true);
-
-
-    //Khi thông thường chạy với môi trường bình thường ở nhà
-    renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED |
-                                              SDL_RENDERER_PRESENTVSYNC);
-    //Khi chạy ở máy thực hành WinXP ở trường (máy ảo)
-    //renderer = SDL_CreateSoftwareRenderer(SDL_GetWindowSurface(window));
-    if (renderer == nullptr) logSDLError(std::cout, "CreateRenderer", true);
-
-    SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, "linear");
-    SDL_RenderSetLogicalSize(renderer, SCREEN_WIDTH, SCREEN_HEIGHT);
-}
-
-void quitSDL(SDL_Window* window, SDL_Renderer* renderer)
-{
-	SDL_DestroyRenderer(renderer);
-	SDL_DestroyWindow(window);
-	SDL_Quit();
-}
-
-void waitUntilKeyPressed()
-{
-    SDL_Event e;
-    while (true) {
-        if ( SDL_WaitEvent(&e) != 0 &&
-             (e.type == SDL_KEYDOWN || e.type == SDL_MOUSEBUTTONDOWN || e.type == SDL_QUIT) )
-            return;
-        SDL_Delay(100);
-    }
-}
-
-/**
-* Nạp một ảnh bitmap (BMP) vào một texture trên thiết bị hiện thị (rendering device)
-* @param file: đường dẫn và tên file ảnh BMP
-* @param ren: renderer để nạp texture lên
-* @return trả về texture đã nạp, hoặc nullptr nếu có lỗi.
-*/
-SDL_Texture *loadTexture(const char *filename, SDL_Renderer* renderer)
-{
-	SDL_LogMessage(SDL_LOG_CATEGORY_APPLICATION, SDL_LOG_PRIORITY_INFO, "Loading %s", filename);
-
-	SDL_Texture *texture = IMG_LoadTexture(renderer, filename);
-	if (texture == NULL)
-        SDL_LogMessage(SDL_LOG_CATEGORY_APPLICATION, SDL_LOG_PRIORITY_ERROR, "Load texture %s", IMG_GetError());
-
-	return texture;
-}
-
-/**
-* Vẽ một SDL_Texture lên một SDL_Renderer tại toạ độ (x, y), trong khi
-* giữ nguyên chiều rộng và cao của ảnh
-* @param tex: texture nguồn chúng ta muốn vẽ ra
-* @param ren: thiết bị renderer chúng ta muốn vẽ vào
-* @param x: hoành độ
-* @param y: tung độ
-*/
-void renderTexture(SDL_Texture *tex, SDL_Renderer *ren, int x, int y)
-{
-	//Thiết lập hình chữ nhật đích mà chúng ta muốn vẽ ảnh vào trong
-	SDL_Rect dst;
-	dst.x = x;
-	dst.y = y;
-	//Truy vẫn texture để lấy chiều rộng và cao (vào chiều rộng và cao tương ứng của hình chữ nhật đích)
-	SDL_QueryTexture(tex, NULL, NULL, &dst.w, &dst.h);
-    //Đưa toàn bộ ảnh trong texture vào hình chữ nhật đích
-	SDL_RenderCopy(ren, tex, NULL, &dst);
-}
-
-/**
-* Vẽ một SDL_Texture lên một SDL_Renderer tại toạ độ (x, y), với
-* chiều rộng và cao mới
-* @param tex: texture nguồn chúng ta muốn vẽ ra
-* @param ren: thiết bị renderer chúng ta muốn vẽ vào
-* @param x: hoành độ
-* @param y: tung độ
-* @param w: chiều rộng (mới)
-* @param h: độ cao (mới)
-*/
-void renderTexture(SDL_Texture *tex, SDL_Renderer *ren, int x, int y, int w, int h)
-{
-	//Thiết lập hình chữ nhật đích mà chúng ta muốn vẽ ảnh vào trong
-	SDL_Rect dst;
-	dst.x = x;
-	dst.y = y;
-    dst.w = w;
-    dst.h = h;
-    //Đưa toàn bộ ảnh trong texture vào hình chữ nhật đích
-    //(ảnh sẽ co dãn cho khớp với kích cỡ mới)
-	SDL_RenderCopy(ren, tex, NULL, &dst);
-}
-//**************************************************************
-
