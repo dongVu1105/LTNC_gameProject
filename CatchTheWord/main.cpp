@@ -49,12 +49,13 @@ void printInputToPlayAgain(int userScore, string ans);
 string inputToPlayAgain(int userScore, string systemWord);
 string playAgain(int userScore, string systemWord);
 void printWin();
-void printVictory(int userScore);
+void printGameOver();
+void printEndGame(int userScore);
 
 SDL_Window* window;
 SDL_Renderer* renderer;
 SDL_Texture *background;
-SDL_Texture *exactly, *lose, *not_correct, *suggest, *play_again, *win, *play_continue;
+SDL_Texture *exactly, *lose, *not_correct, *suggest, *play_again, *win, *play_continue, *game_over;
 SDL_Texture *numberScore[maxScore+1];
 SDL_Texture *numberButtoms[NUM_BUTTOMS+1];
 SDL_Texture *numberCharacter[maxCharacter+1];
@@ -71,9 +72,7 @@ int main(){
         playGame(userScore, systemWord);
         string option = playAgain(userScore, systemWord);
         if(option == "n"){
-            if(userScore > 0){
-                printVictory(userScore);
-            }
+            printEndGame(userScore);
             break;
         }
     }
@@ -113,7 +112,6 @@ bool playGame(int &userScore, string systemWord){
             printTrue();
             userScore = currentScore(userScore, flag);
             pause();
-            userScore = currentScore(userScore, true);
             return true;
         } else {
             flag = false;
@@ -124,7 +122,7 @@ bool playGame(int &userScore, string systemWord){
             if(userScore <= 0){
                 showGame();
                 printLose();
-                userScore = currentScore(userScore, flag);
+                userScore = currentScore(userScore, true);
                 pause();
                 return false;
             }
@@ -310,10 +308,20 @@ void printWin(){
     SDL_RenderPresent(renderer);
 }
 
-void printVictory(int userScore){
+void printGameOver(){
+    graphics.renderTexture(game_over, renderer, 420, 110);
+    SDL_RenderPresent(renderer);
+}
+
+
+void printEndGame(int userScore){
     showGame();
     currentScore(userScore, true);
-    printWin();
+    if(userScore>0){
+        printWin();
+    } else{
+        printGameOver();
+    }
 }
 
 void showGame()
@@ -376,6 +384,7 @@ void load_SDL_and_Images()
     play_again = graphics.loadTexture("images/play_again.png", renderer);
     play_continue = graphics.loadTexture("images/play_continue.png", renderer);
     win = graphics.loadTexture("images/win.png", renderer);
+    game_over = graphics.loadTexture("images/game_over.png", renderer);
     bool is_load_buttom_failed = false;
     bool is_load_score_failed = false;
     bool is_load_character_failed = false;
@@ -420,7 +429,7 @@ void load_SDL_and_Images()
     }
     if (background == nullptr  || exactly == nullptr || lose == nullptr
         || not_correct == nullptr  || suggest == nullptr || play_again == nullptr
-        || win == nullptr || is_load_buttom_failed || is_load_character_failed || is_load_score_failed || is_load_questionImg_failed){
+        || win == nullptr || game_over == nullptr || is_load_buttom_failed || is_load_character_failed || is_load_score_failed || is_load_questionImg_failed){
         unload_SDL_and_Images();
         exit(1);
     }
