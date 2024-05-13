@@ -1,0 +1,15 @@
+# depslib dependency file v1.0
+1715597173 source:d:\ltnc\ltnc_project\catchtheword\main.cpp
+	<bits/stdc++.h>
+	<ctime>
+	<SDL_image.h>
+	"defs.h"
+	"graphics.h"
+
+1714924947 d:\ltnc\ltnc_project\catchtheword\defs.h
+
+1714925979 d:\ltnc\ltnc_project\catchtheword\graphics.h
+	<SDL.h>
+	<SDL_image.h>
+	"defs.h"
+

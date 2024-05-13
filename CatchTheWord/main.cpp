@@ -61,7 +61,7 @@ SDL_Texture *numberButtoms[NUM_BUTTOMS+1];
 SDL_Texture *numberCharacter[maxCharacter+1];
 SDL_Texture *numberImg[wordCount+1];
 
-int main(){
+int main(int argc, char *argv[]){
     load_SDL_and_Images();
     while (1){
         displayStartGame();
@@ -434,3 +434,5 @@ void load_SDL_and_Images()
         exit(1);
     }
 }
+
+
