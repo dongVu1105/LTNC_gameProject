@@ -1,7 +1,7 @@
 
 # Hướng dẫn chơi game CatchTheWord
 ## 1. Khởi tạo trò chơi
-- Vào file **main.cpp**, sau đó nhấn **F9** để bắt đầu chơi.
+- Vào  **CatchTheWord/main.cpp**, sau đó nhấn **F9** để bắt đầu chơi.
 ## 2. Nội dung trò chơi:
 - Đầu tiên, giao diện trò chơi xuất hiện:
   
