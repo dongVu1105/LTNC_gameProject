@@ -24,7 +24,7 @@
  
     <img src="https://github.com/dongVu1105/LTNC_gameProject/assets/157719316/21095eb2-f1de-4be5-b613-6650b8503011" alt="..." width="600" />
     
-- Sau khi trả lời đúng hoặc sai quá 3 lần, người chơi sẽ lựa chọn chơi tiếp hoặc dừng lại bằng cách nhấn phím Y (chơi tiếp) hoặc N (dừng lại).
+- Sau khi trả lời đúng (hoặc sai quá 3 lần), người chơi sẽ lựa chọn chơi tiếp hoặc dừng lại bằng cách nhấn phím Y (chơi tiếp) hoặc N (dừng lại).
 
   <img src="https://github.com/dongVu1105/LTNC_gameProject/assets/157719316/fb9f1aeb-930d-46ea-b997-8762c718432c" alt="..." width="600" />
   
