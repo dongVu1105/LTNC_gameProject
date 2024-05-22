@@ -15,7 +15,7 @@ const string wordList[] = {"firefox", "rockstar","eyelid", "blackmail",
 "keyboard", "kidnap", "pineapple", "popcorn", "rainbow", "rainforest",
 "redbull", "seafood", "secondhand", "starfish", "sunflower", "waterfall",
 "watermelon"};
-const int wordCount = sizeof(wordList) / sizeof(string);
+const int wordListSize = sizeof(wordList) / sizeof(string);
 const int maxScore = 3;
 const int maxCharacter = 15;
 
@@ -59,7 +59,7 @@ SDL_Texture *exactly, *lose, *not_correct, *suggest, *play_again, *win, *play_co
 SDL_Texture *numberScore[maxScore+1];
 SDL_Texture *numberButtoms[NUM_BUTTOMS+1];
 SDL_Texture *numberCharacter[maxCharacter+1];
-SDL_Texture *numberImg[wordCount+1];
+SDL_Texture *numberImg[wordListSize+1];
 
 int main(int argc, char *argv[]){
     load_SDL_and_Images();
@@ -92,7 +92,7 @@ void printQuestion(string systemWord){
 
 string chooseWord()
 {
-	int randomIndex = rand() % wordCount;
+	int randomIndex = rand() % wordListSize;
     return wordList[randomIndex];
 }
 
@@ -143,7 +143,7 @@ int computeNumber(int x, int y)
 int playerChoose(){
     int number=-1;
     SDL_Event e;
-    while (number<=0 || number>30) {
+    while (number<=0) {
         SDL_Delay(10);
         if ( SDL_WaitEvent(&e) == 0) continue;
         if ((e.type == SDL_QUIT) || (e.type == SDL_KEYDOWN && e.key.keysym.sym == SDLK_ESCAPE)) {
@@ -217,7 +217,7 @@ int findIndexOfWord(const string wordList[],const int n, string word) {
 }
 
 void printImg(string systemWord){
-    int index = findIndexOfWord(wordList, wordCount, systemWord);
+    int index = findIndexOfWord(wordList, wordListSize, systemWord);
     graphics.renderTexture(numberImg[index], renderer, 410, 110);
     SDL_RenderPresent(renderer);
 }
@@ -241,7 +241,7 @@ void printTrue(){
 }
 
 bool checkWord(string systemWord, string userWord){
-    if (userWord.length() == systemWord.length() && userWord == systemWord){
+    if (userWord == systemWord){
         return true;
     }
     return false;
@@ -333,18 +333,10 @@ void showGame()
 
 void pause()
 {
-    int delayTime = 1500;
+    int delayTime = 1600;
     do {
         SDL_Delay(10);
         delayTime-= 10;
-
-        SDL_Event e;
-        while (SDL_PollEvent(&e)) {
-            if ((e.type == SDL_QUIT) || (e.type == SDL_KEYDOWN && e.key.keysym.sym == SDLK_ESCAPE)) {
-                unload_SDL_and_Images();
-                exit(1);
-            }
-        }
     } while (delayTime > 0);
 }
 
@@ -418,7 +410,7 @@ void load_SDL_and_Images()
             break;
         }
     }
-    for (int i=0; i<wordCount; i++) {
+    for (int i=0; i<wordListSize; i++) {
         string filename = "images/" +wordList[i] + ".png";
         const char* filename_cstr = filename.c_str();
         numberImg[i] = graphics.loadTexture(filename_cstr, renderer);
