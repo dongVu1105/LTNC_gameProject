@@ -9,6 +9,9 @@
   
   - Chính giữa màn hình: Câu hỏi được lựa chọn ngẫu nhiên.
   - Bảng chữ cái: Người dùng trả lời bằng cách nhấn vào các kí tự trong bảng. Dùng DELETE để xoá 1 kí tự đang nhập, dùng ENTER để gửi câu trả lời.
+
+    <img src="https://github.com/dongVu1105/LTNC_gameProject/assets/157719316/0b39f9da-bacf-4c6e-8ea7-bde9c58cff0f" alt="..." width="600" />
+    
   - Bên trái: Gợi ý số lượng kí tự của từ cần đoán
   - Bên phải: Điểm số của người chơi.
 - Với mỗi câu hỏi, người chơi sẽ có 30 điểm.
@@ -25,8 +28,13 @@
     <img src="https://github.com/dongVu1105/LTNC_gameProject/assets/157719316/21095eb2-f1de-4be5-b613-6650b8503011" alt="..." width="600" />
     
 - Sau khi trả lời đúng (hoặc sai quá 3 lần), người chơi sẽ lựa chọn chơi tiếp hoặc dừng lại bằng cách nhấn phím Y (chơi tiếp) hoặc N (dừng lại).
+  - Trả lời đúng:
 
-  <img src="https://github.com/dongVu1105/LTNC_gameProject/assets/157719316/fb9f1aeb-930d-46ea-b997-8762c718432c" alt="..." width="600" />
+    <img src="https://github.com/dongVu1105/LTNC_gameProject/assets/157719316/f270d067-9dd2-4687-a377-6567379dad5e" alt="..." width="600" />
+
+  - Trả lời sai quá 3 lần:
+
+    <img src="https://github.com/dongVu1105/LTNC_gameProject/assets/157719316/fb9f1aeb-930d-46ea-b997-8762c718432c" alt="..." width="600" />
   
   - Với lựa chọn Y, hệ thống sẽ bắt đầu một câu hỏi mới (được lựa chọn ngẫu nhiên).
   - Với lựa chọn N: Nếu số điểm của câu hỏi hiện tại lớn hơn 0, người chơi thắng; Ngược lại, người chơi thua.
