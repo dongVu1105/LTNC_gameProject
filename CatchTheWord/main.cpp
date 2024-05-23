@@ -8,13 +8,13 @@
 using namespace std;
 
 Graphics graphics;
-const int NUM_BUTTOMS = 26;
 const string wordList[] = {"firefox", "rockstar","eyelid", "blackmail",
 "brainstorm", "brokenheart", "carwash", "cocktail", "countdown",
 "deadline", "fastfood", "firefly", "fullmoon", "honeymoon", "hourglass",
 "keyboard", "kidnap", "pineapple", "popcorn", "rainbow", "rainforest",
 "redbull", "seafood", "secondhand", "starfish", "sunflower", "waterfall",
 "watermelon"};
+const int NUM_BUTTOMS = 26;
 const int wordListSize = sizeof(wordList) / sizeof(string);
 const int maxScore = 3;
 const int maxCharacter = 15;
@@ -23,7 +23,6 @@ void load_SDL_and_Images();
 void unload_SDL_and_Images();
 void showGame();
 void pause();
-
 void displayStartGame();
 string chooseWord();
 void printTrue();
@@ -43,7 +42,7 @@ void printScore(int userScore);
 int currentScore(int userScore, bool flag);
 bool checkWord(string systemWord, string userWord);
 void printLose();
-void printOption();
+void printOption(int userScore);
 void printOptionQuestion(int userScore);
 void printInputToPlayAgain(int userScore, string ans);
 string inputToPlayAgain(int userScore, string systemWord);
@@ -349,6 +348,8 @@ void unload_SDL_and_Images()
     SDL_DestroyTexture(suggest);
     SDL_DestroyTexture(play_again);
     SDL_DestroyTexture(win);
+    SDL_DestroyTexture(play_continue);
+    SDL_DestroyTexture(game_over);
     for (int i=0; i<NUM_BUTTOMS; i++) {
         SDL_DestroyTexture(numberButtoms[i]);
     }
@@ -421,7 +422,9 @@ void load_SDL_and_Images()
     }
     if (background == nullptr  || exactly == nullptr || lose == nullptr
         || not_correct == nullptr  || suggest == nullptr || play_again == nullptr
-        || win == nullptr || game_over == nullptr || is_load_buttom_failed || is_load_character_failed || is_load_score_failed || is_load_questionImg_failed){
+        || win == nullptr || play_continue == nullptr || game_over == nullptr ||
+        is_load_buttom_failed || is_load_character_failed || is_load_score_failed ||
+        is_load_questionImg_failed){
         unload_SDL_and_Images();
         exit(1);
     }
